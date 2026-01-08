@@ -1,0 +1,11 @@
+# Robots.txt for itzbandhan.tech
+# Bandhan Pokhrel - Full-Stack Developer Portfolio
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://itzbandhan.tech/sitemap.xml
+
+# Crawl delay for politeness
+Crawl-delay: 1

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { supabase } from '../../lib/supabase'
 import './Projects.css'
 
-const projects = [
+// Default projects (fallback if database is empty)
+const defaultProjects = [
     {
         type: 'Web Application',
         title: 'Video Content Platform',
@@ -39,6 +41,23 @@ const projects = [
 export default function Projects() {
     const sectionRef = useRef()
     const [hoveredIndex, setHoveredIndex] = useState(null)
+    const [projects, setProjects] = useState(defaultProjects)
+
+    useEffect(() => {
+        // Fetch projects from Supabase
+        const fetchProjects = async () => {
+            const { data, error } = await supabase
+                .from('projects')
+                .select('*')
+                .order('created_at', { ascending: false })
+
+            if (!error && data && data.length > 0) {
+                setProjects(data)
+            }
+        }
+
+        fetchProjects()
+    }, [])
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -59,7 +78,7 @@ export default function Projects() {
         })
 
         return () => observer.disconnect()
-    }, [])
+    }, [projects])
 
     return (
         <section id="projects" className="projects" ref={sectionRef}>
@@ -75,11 +94,11 @@ export default function Projects() {
                 <div className="projects-grid">
                     {projects.map((project, index) => (
                         <a
-                            key={index}
-                            href={project.url}
+                            key={project.id || index}
+                            href={project.url || '#'}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`project-card color-${project.color} ${hoveredIndex === index ? 'hovered' : ''}`}
+                            className={`project-card color-${project.color || 'primary'} ${hoveredIndex === index ? 'hovered' : ''}`}
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
                         >
@@ -96,7 +115,7 @@ export default function Projects() {
                             <p className="project-description">{project.description}</p>
 
                             <div className="project-tags">
-                                {project.tags.map((tag, i) => (
+                                {(project.tags || []).map((tag, i) => (
                                     <span key={i} className="project-tag">{tag}</span>
                                 ))}
                             </div>
