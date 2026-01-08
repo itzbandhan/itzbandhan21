@@ -145,9 +145,14 @@
 
 /* Submit Button */
 .submit-btn {
-    width: 100%;
+    width: auto;
+    min-width: 180px;
     padding: 1rem 2rem;
     font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .submit-btn:disabled {
@@ -227,6 +232,10 @@
 
     .contact-form {
         padding: 2rem;
+    }
+
+    .submit-btn {
+        width: 100%;
     }
 }
 

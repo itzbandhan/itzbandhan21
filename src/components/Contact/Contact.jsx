@@ -54,6 +54,7 @@ export default function Contact() {
         setStatus({ type: '', message: '' })
 
         try {
+            // Save to database
             const { error } = await supabase
                 .from('contact_submissions')
                 .insert([
@@ -67,6 +68,32 @@ export default function Contact() {
                 ])
 
             if (error) throw error
+
+            // Send email notification & auto-reply via Edge Function
+            // We use direct fetch to ensure explicit control over headers
+            try {
+                const response = await fetch('https://wcryldcvnqziilneabca.supabase.co/functions/v1/send-contact-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        email: formData.email,
+                        message: formData.message
+                    })
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Function returned ${response.status}: ${response.statusText}`)
+                }
+            } catch (emailError) {
+                console.warn('Email notification failed:', emailError)
+                if (emailError.message?.includes('401')) {
+                    console.error('ACTION REQUIRED: Go to Supabase Dashboard > Edge Functions > send-contact-email > Settings > Uncheck "Enforce JWT Verification"')
+                }
+            }
 
             setStatus({
                 type: 'success',
