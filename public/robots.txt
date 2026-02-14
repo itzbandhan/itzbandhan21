@@ -1,5 +1,5 @@
 # Robots.txt for itzbandhan.tech
-# Bandhan Pokhrel - Full-Stack Developer Portfolio
+# Bandhan Pokhrel - Founder & CEO of NIV Nepal
 
 User-agent: *
 Allow: /

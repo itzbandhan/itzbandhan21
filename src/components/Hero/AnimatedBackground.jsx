@@ -7,6 +7,17 @@ function ParticleField({ count = 3000 }) {
     const ref = useRef()
     const mousePosition = useRef({ x: 0, y: 0 })
 
+    useMemo(() => {
+        const handleMouseMove = (event) => {
+            mousePosition.current = {
+                x: (event.clientX / window.innerWidth) * 2 - 1,
+                y: -(event.clientY / window.innerHeight) * 2 + 1
+            }
+        }
+        window.addEventListener('mousemove', handleMouseMove)
+        return () => window.removeEventListener('mousemove', handleMouseMove)
+    }, [])
+
     const positions = useMemo(() => {
         const positions = new Float32Array(count * 3)
         for (let i = 0; i < count; i++) {
@@ -19,14 +30,16 @@ function ParticleField({ count = 3000 }) {
 
     useFrame((state, delta) => {
         if (ref.current) {
-            ref.current.rotation.x += delta * 0.02
-            ref.current.rotation.y += delta * 0.03
+            // Autonomous rotation
+            ref.current.rotation.x += delta * 0.015
+            ref.current.rotation.y += delta * 0.02
 
-            // Subtle mouse follow
-            const targetX = mousePosition.current.x * 0.0002
-            const targetY = mousePosition.current.y * 0.0002
-            ref.current.rotation.x += (targetY - ref.current.rotation.x) * 0.05
-            ref.current.rotation.y += (targetX - ref.current.rotation.y) * 0.05
+            // Mouse-follow tilt (smooth interpolation)
+            const targetX = mousePosition.current.y * 0.15
+            const targetY = mousePosition.current.x * 0.15
+
+            ref.current.rotation.x += (targetX - ref.current.rotation.x) * 0.03
+            ref.current.rotation.y += (targetY - ref.current.rotation.y) * 0.03
         }
     })
 

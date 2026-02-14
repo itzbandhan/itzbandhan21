@@ -85,19 +85,36 @@
 .social-link:hover {
     background: var(--accent-primary);
     border-color: var(--accent-primary);
-    transform: translateY(-3px);
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: var(--shadow-glow);
 }
 
 .social-link:hover svg {
     color: white;
 }
 
+.social-link[aria-label="GitHub"]:hover {
+    background: #24292e;
+    border-color: #24292e;
+}
+
+.social-link[aria-label="LinkedIn"]:hover {
+    background: #0077b5;
+    border-color: #0077b5;
+}
+
+.social-link[aria-label="Twitter"]:hover {
+    background: #1da1f2;
+    border-color: #1da1f2;
+}
+
 /* Contact Form */
 .contact-form {
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--border-radius);
-    padding: 2.5rem;
+    padding: 3rem;
+    backdrop-filter: blur(10px);
 }
 
 /* CAPTCHA Wrapper */

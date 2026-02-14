@@ -7,6 +7,7 @@ const navLinks = [
     { href: '#skills', label: 'Skills' },
     { href: '#projects', label: 'Projects' },
     { href: '#contact', label: 'Contact' },
+    { href: 'https://projectblogs.itzbandhan.tech', label: 'Blog', external: true },
 ]
 
 export default function Navbar() {
@@ -18,9 +19,12 @@ export default function Navbar() {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50)
 
-            // Update active section based on scroll position
-            const sections = navLinks.map(link => link.href.slice(1))
-            for (const section of sections.reverse()) {
+            // Update active section based on scroll position - only for internal links
+            const internalSections = navLinks
+                .filter(link => link.href.startsWith('#'))
+                .map(link => link.href.slice(1))
+
+            for (const section of [...internalSections].reverse()) {
                 const element = document.getElementById(section)
                 if (element) {
                     const rect = element.getBoundingClientRect()
@@ -36,9 +40,11 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
-    const handleLinkClick = (e, href) => {
+    const handleLinkClick = (e, link) => {
+        if (link.external) return // Let default behavior happen for external links
+
         e.preventDefault()
-        const element = document.querySelector(href)
+        const element = document.querySelector(link.href)
         element?.scrollIntoView({ behavior: 'smooth' })
         setIsMobileMenuOpen(false)
     }
@@ -46,7 +52,7 @@ export default function Navbar() {
     return (
         <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
             <div className="container navbar-container">
-                <a href="#hero" className="navbar-logo" onClick={(e) => handleLinkClick(e, '#hero')}>
+                <a href="#hero" className="navbar-logo" onClick={(e) => handleLinkClick(e, { href: '#hero' })}>
                     <span className="logo-text">B</span>
                     <span className="logo-full">andhan</span>
                 </a>
@@ -62,14 +68,21 @@ export default function Navbar() {
                 </button>
 
                 <ul className={`navbar-links ${isMobileMenuOpen ? 'open' : ''}`}>
-                    {navLinks.map(({ href, label }) => (
-                        <li key={href}>
+                    {navLinks.map((link) => (
+                        <li key={link.href}>
                             <a
-                                href={href}
-                                className={activeSection === href.slice(1) ? 'active' : ''}
-                                onClick={(e) => handleLinkClick(e, href)}
+                                href={link.href}
+                                className={activeSection === link.href.slice(1) ? 'active' : ''}
+                                onClick={(e) => handleLinkClick(e, link)}
+                                target={link.external ? "_blank" : undefined}
+                                rel={link.external ? "noopener noreferrer" : undefined}
                             >
-                                {label}
+                                {link.label}
+                                {link.external && (
+                                    <svg className="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                                    </svg>
+                                )}
                             </a>
                         </li>
                     ))}
