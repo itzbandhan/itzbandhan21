@@ -2,7 +2,12 @@
   "redirects": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.itzbandhan.tech" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.itzbandhan.tech"
+        }
+      ],
       "destination": "https://itzbandhan.tech/:path*",
       "permanent": true
     }
@@ -15,11 +20,32 @@
   ],
   "headers": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
       ]
     }
   ]
