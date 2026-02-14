@@ -40,7 +40,6 @@ const defaultProjects = [
 
 export default function Projects() {
     const sectionRef = useRef()
-    const [hoveredIndex, setHoveredIndex] = useState(null)
     const [projects, setProjects] = useState(defaultProjects)
 
     useEffect(() => {
@@ -98,9 +97,7 @@ export default function Projects() {
                             href={project.url || '#'}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`project-card color-${project.color || 'primary'} ${hoveredIndex === index ? 'hovered' : ''}`}
-                            onMouseEnter={() => setHoveredIndex(index)}
-                            onMouseLeave={() => setHoveredIndex(null)}
+                            className={`project-card color-${project.color || 'primary'}`}
                         >
                             <div className="project-header">
                                 <span className="project-type">{project.type}</span>

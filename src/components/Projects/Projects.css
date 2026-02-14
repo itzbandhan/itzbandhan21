@@ -21,13 +21,11 @@
     overflow: hidden;
     opacity: 0;
     transform: translateY(30px);
-    visibility: hidden;
 }
 
 .project-card.visible {
     opacity: 1;
     transform: translateY(0);
-    visibility: visible;
 }
 
 .project-card::after {
@@ -51,7 +49,6 @@
 
 .project-card.visible:hover {
     opacity: 1 !important;
-    visibility: visible !important;
     transform: translateY(-12px) scale(1.02) !important;
     z-index: 50;
     border-color: var(--accent-primary) !important;
